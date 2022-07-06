@@ -1,3 +1,6 @@
+<script lang="ts">
+	export let todo: Todo;
+</script>
 
 <style>
 	.todo {
@@ -92,7 +95,7 @@
 	</form>
 
 	<form action="" class="text">
-		<input type="text" name="" id="" />
+		<input type="text" value="{todo.text}"/>
 		<button class="save"></button>
 	</form>
 
