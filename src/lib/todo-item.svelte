@@ -94,8 +94,8 @@
 		<button class="toggle"></button>
 	</form>
 
-	<form action="" class="text">
-		<input type="text" value="{todo.text}"/>
+	<form action="/todos/{todo.uid}.json?_method=patch" class="text" method="post">
+		<input type="text" value="{todo.text}" name="text"/>
 		<button class="save"></button>
 	</form>
 
