@@ -8,7 +8,7 @@ export const del: RequestHandler = async ({ params, request }) => {
 export const patch: RequestHandler = async ({ params, request }) => {
     const formData = await request.formData()    
     return api(request, {
-        text: formData.get("text") as string,
+        text: formData.has("text") ? formData.get("text") as string : undefined,
         done: formData.has("done") ? !!formData.get("done") : undefined,
         uid: params.uid as string
     })

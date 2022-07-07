@@ -1,36 +1,36 @@
-// TODO: Persist todos in database
-let todos: Todo[] = [];
+import PrismaClient from "$lib/prisma";
 
-export const api = (request: Request, data?: Record<string, unknown>) => {
+const prisma = new PrismaClient();
+
+export const api = async (request: Request, data?: Record<string, unknown>) => {
     let body = {};
     let status = 500;
 
     switch (request.method.toUpperCase()) {
         case "GET":
+            body = await prisma.todo.findMany();
             status = 200;
-            body = todos;
             break;
 
         case "POST":
-            todos.push(data as Todo);
-            body = data || {};
+            body = await prisma.todo.create({data: {
+                created_at: data?.created_at as Date,
+                text: data?.text as string,
+                done: data?.done as boolean,
+            }});
             status = 201;
             break;
         case "DELETE":
+            body = await prisma.todo.delete({where: {uid: data?.uid as string}});
             status = 204;
-            todos = todos.filter(t => t.uid !== data?.uid);
             break;
 
         case "PATCH":
-            todos = todos.map(todo => {
-                if (todo.uid === data?.uid) {
-                    if (data.text !== null) todo.text = data.text as string;
-                    else todo.done = data.done as boolean;
-                }
-                return todo;
-            });
+            body = await prisma.todo.update({where: {uid: data?.uid as string}, data: {
+                text: data?.text as string | undefined,
+                done: data?.done as boolean | undefined,
+            }});
             status = 200;
-            body = todos.find(t => t.uid === data?.uid) || {};
             break;
 
         default:
