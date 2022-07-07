@@ -1,5 +1,9 @@
 <script lang="ts">
+	import { enhance } from '$lib/actions/form';
 	export let todo: Todo;
+
+	export let processDeletedTodoResult: (res: Response) => void;
+	export let processUpdatedTodoResult: (res: Response) => void;
 </script>
 
 <style>
@@ -88,17 +92,17 @@
 
 
 <div class="todo" class:done={todo.done}>
-	<form action="/todos/{todo.uid}.json?_method=patch" method="post">
+	<form action="/todos/{todo.uid}.json?_method=patch" method="post" use:enhance={{result: processUpdatedTodoResult}}>
 		<input type="hidden" name="done" value="{todo.done ? '' : 'true'}"/>
 		<button class="toggle"></button>
 	</form>
 
-	<form action="/todos/{todo.uid}.json?_method=patch" class="text" method="post">
+	<form action="/todos/{todo.uid}.json?_method=patch" class="text" method="post" use:enhance={{result: processUpdatedTodoResult}}>
 		<input type="text" value="{todo.text}" name="text"/>
 		<button class="save"></button>
 	</form>
 
-	<form action="/todos/{todo.uid}.json?_method=delete" method="post">
+	<form action="/todos/{todo.uid}.json?_method=delete" method="post" use:enhance={{result: processDeletedTodoResult}}>
 		<button class="delete"></button>
 	</form>
 </div>
