@@ -1,5 +1,7 @@
 <script context="module" lang="ts">
     import type { Load } from "@sveltejs/kit";
+    import { enhance } from "$lib/actions/form";
+
     export const load: Load = async ({ fetch }) => {
         const response = await fetch("/todos.json");
         if (response.ok) {
@@ -21,6 +23,21 @@
     export let todos: Todo[];
 
     const title = "Todo";
+
+    const processNewTodoResult = async (result: Response, form: HTMLFormElement) => {
+        const newTodo = await result.json();
+        todos = [...todos, newTodo];
+        form.reset();
+    };
+
+    const processUpdatedTodoResult = async (result: Response) => {
+        const updatedTodo = await result.json();
+        todos = todos.map(t => {
+            if (t.uid === updatedTodo.uid) return updatedTodo;
+            return t;
+        });
+    };
+
 </script>
 
 <style>
@@ -62,10 +79,16 @@
 <div class="todos">
     <h1>{title}</h1>
 
-    <form class="new" action="/todos.json" method="post">
+    <form class="new" action="/todos.json" method="post" use:enhance={{result: processNewTodoResult}}>
         <input type="text" name="text" placeholder="+ create a new todo">
     </form>
+
     {#each todos as todo}
-        <TodoItem {todo}/>
+        <TodoItem {todo}
+        processDeletedTodoResult={() => {
+            todos = todos.filter(t => t.uid !== todo.uid);
+          }}
+        {processUpdatedTodoResult}
+          />
     {/each}
 </div>

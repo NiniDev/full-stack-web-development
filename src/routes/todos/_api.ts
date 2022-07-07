@@ -17,6 +17,7 @@ export const api = (request: Request, data?: Record<string, unknown>) => {
             status = 201;
             break;
         case "DELETE":
+            status = 204;
             todos = todos.filter(t => t.uid !== data?.uid);
             break;
 
@@ -29,13 +30,14 @@ export const api = (request: Request, data?: Record<string, unknown>) => {
                 return todo;
             });
             status = 200;
+            body = todos.find(t => t.uid === data?.uid) || {};
             break;
 
         default:
             break;
     }
 
-    if (request.method.toUpperCase() !== "GET") {
+    if (request.method.toUpperCase() !== "GET" && request.headers.get('accept') !== 'application/json') {
         return {
             status: 303,
             headers: {
