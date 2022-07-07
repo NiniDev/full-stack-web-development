@@ -1,27 +1,16 @@
 import type { RequestHandler } from "@sveltejs/kit";
-
-// TODO: Persist todos in database
-let todos: Todo[] = [];
+import { api } from "./_api";
 
 export const get: RequestHandler = async ({ request }) => {
-  return {
-    status: 200,
-    body: todos,
-  }
+  return api(request);
 }
 
 export const post: RequestHandler = async ({ request }) => {
   const formData = await request.formData();
-  todos.push({
+  return api(request, {
     text: formData.get("text") as string,
     done: false,
     created_at: new Date(),
+    uid: `${Date.now()}` // TODO: use uid generator
   });
-
-  return {
-    status: 303,
-    headers: {
-        Location: "/"
-    }
-  }
 }

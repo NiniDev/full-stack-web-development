@@ -99,7 +99,7 @@
 		<button class="save"></button>
 	</form>
 
-	<form action="">
+	<form action="/todos/{todo.uid}.json?_method=delete" method="post">
 		<button class="delete"></button>
 	</form>
 </div>
