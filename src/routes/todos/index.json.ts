@@ -11,6 +11,5 @@ export const post: RequestHandler = async ({ request }) => {
     text: formData.get("text") as string,
     done: false,
     created_at: new Date(),
-    uid: `${Date.now()}` // TODO: use uid generator
   });
 }
