@@ -1,3 +1,6 @@
+<script lang="ts">
+	export let todo: Todo;
+</script>
 
 <style>
 	.todo {
@@ -72,7 +75,6 @@
 		opacity: 1;
 	}
 
-	/* TODO: uncomment when ready to use
     .done {
 		transform: none;
 		opacity: 0.4;
@@ -81,22 +83,22 @@
 
 	.done .toggle {
 		background-image: url("data:image/svg+xml,%3Csvg width='22' height='16' viewBox='0 0 22 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20.5 1.5L7.4375 14.5L1.5 8.5909' stroke='%23676778' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-	} */
+	}
 </style>
 
 
-<div class="todo">
-	<form action="">
-		<input type="hidden" name="done" />
+<div class="todo" class:done={todo.done}>
+	<form action="/todos/{todo.uid}.json?_method=patch" method="post">
+		<input type="hidden" name="done" value="{todo.done ? '' : 'true'}"/>
 		<button class="toggle"></button>
 	</form>
 
-	<form action="" class="text">
-		<input type="text" name="" id="" />
+	<form action="/todos/{todo.uid}.json?_method=patch" class="text" method="post">
+		<input type="text" value="{todo.text}" name="text"/>
 		<button class="save"></button>
 	</form>
 
-	<form action="">
+	<form action="/todos/{todo.uid}.json?_method=delete" method="post">
 		<button class="delete"></button>
 	</form>
 </div>
